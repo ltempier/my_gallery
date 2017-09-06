@@ -1,0 +1,19 @@
+{
+  "name": "my_gallery",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node ./test/server",
+    "generateTestImg": "node ./test/generateImg"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "express": "^4.15.4",
+    "sharp": "^0.18.2"
+  }
+}
