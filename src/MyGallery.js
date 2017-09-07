@@ -1,11 +1,16 @@
 "use strict";
 
 
-class Gallery {
+class MyGallery {
 
-    constructor(selector, listItem) {
+    constructor(selector, listItem, options) {
 
-        this.columns = 3;
+        options = options || {};
+
+        this.columns = options.columns || 3;
+        this.firstItemWidth = options.firstItemWidth || Math.ceil(this.columns / 2);
+        this.resizeRatio = options.resizeRatio || (10 / 100);
+
         this.$gallery = $(selector);
 
         this.$gallery.empty();
@@ -14,19 +19,17 @@ class Gallery {
         this.galleryWidthPixel = 0;
         this.galleryHeightPixel = 0;
 
-        this.cropRatio = 10 / 100;
-
         this.setListItem(listItem);
     }
 
     setListItem(listItem) {
-        this.listItem = [];
+        this._listItem = [];
         var self = this;
         (listItem || []).forEach(function (item, idx) {
             var img = new Image();
             img.onload = function () {
 
-                self.listItem.push({
+                self._listItem.push({
                     src: this.src,
                     idx: this.idx,
                     alt: this.alt,
@@ -34,8 +37,8 @@ class Gallery {
                     width: this.width
                 });
 
-                if (self.listItem.length == listItem.length) {
-                    self.listItem = self.listItem.sort(function (a, b) {
+                if (self._listItem.length == listItem.length) {
+                    self._listItem = self._listItem.sort(function (a, b) {
                         return a.idx - b.idx
                     });
 
@@ -51,24 +54,28 @@ class Gallery {
         });
     }
 
-    getRandomItemWidth(max, i) {
-        if (max == 1)
-            return 1;
+    getItemWidth(max) {
+        var min = 1;
+        var width = min;
 
-        i = i || 0;
         if (!max || max > Math.ceil(this.columns / 2))
             max = Math.ceil(this.columns / 2);
 
-        var min = 2;
-        var random = Math.floor(Math.random() * (max - min + 1)) + min;
-        //return random; //TODO fix
+        this._bufferRandomItemWidth = this._bufferRandomItemWidth || {};
+        this._bufferRandomItemWidth[this._columnIdx] = this._bufferRandomItemWidth[this._columnIdx] || [];
 
-        if (i < 5 && this.lastRandom && this.lastRandom == random)
-            return this.getRandomItemWidth(max, i + 1);
-        else {
-            this.lastRandom = random;
-            return random
+        if (max > 1) {
+            var itemUpWidth = this._bufferRandomItemWidth[this._columnIdx][this._bufferRandomItemWidth[this._columnIdx].length - 1];
+            for (var w = max; w > min; w--) {
+                if (w != itemUpWidth) {
+                    width = w;
+                    break
+                }
+            }
         }
+
+        this._bufferRandomItemWidth[this._columnIdx].push(width);
+        return width;
     }
 
     refresh() {
@@ -85,56 +92,66 @@ class Gallery {
         for (var i = 0; i < this.columns; i++)
             bufferColumnsHeight[i] = 0
 
-        var columnIdx = 0;
+        this._columnIdx = 0;
+        this._listItem.forEach((originItem, itemIdx) => {
 
-        this.listItem.forEach((originItem) => {
-
+            var self = this;
             var item = JSON.parse(JSON.stringify(originItem));
 
             var itemColumnWidth = 1;
             var maxItemColumnWidth = Math.floor(originItem.width / columnWidthPixel);
 
-            var currentColumnHeight = bufferColumnsHeight[columnIdx];
+            var currentColumnHeight = bufferColumnsHeight[this._columnIdx];
 
-            for (var i = columnIdx + 1; i < bufferColumnsHeight.length; i++) {
+            for (var i = (this._columnIdx + 1); i < bufferColumnsHeight.length; i++) {
                 if (itemColumnWidth >= maxItemColumnWidth) //for best img quality
                     break;
-                if (currentColumnHeight === bufferColumnsHeight[i])
+                if (currentColumnHeight === bufferColumnsHeight[i]) //currentHeight === rightColumnHeight
                     itemColumnWidth += 1;
+                else
+                    break
             }
 
-            itemColumnWidth = this.getRandomItemWidth(itemColumnWidth);
+            if (itemIdx == 0)
+                itemColumnWidth = this.firstItemWidth;
+            else
+                itemColumnWidth = this.getItemWidth(itemColumnWidth);
 
             var widthPx = itemColumnWidth * columnWidthPixel;
 
             item.height = Math.round(item.height * (widthPx / item.width));
             item.width = widthPx;
-            item.left = columnIdx * columnWidthPixel;
-            item.top = bufferColumnsHeight[columnIdx];
+            item.left = this._columnIdx * columnWidthPixel;
+            item.top = bufferColumnsHeight[this._columnIdx];
 
-            var leftColumnHeight = (columnIdx > 0) ? bufferColumnsHeight[columnIdx - 1] : null;
+            var leftColumnHeight = (this._columnIdx > 0) ? bufferColumnsHeight[this._columnIdx - 1] : null;
 
             if (leftColumnHeight) {
                 var deltaHeight = Math.abs(leftColumnHeight - currentColumnHeight);
                 var ratio = deltaHeight / item.height;
 
-                if (Math.abs(1 - ratio) < this.cropRatio) {
+
+                if (itemIdx == 24)
+                    console.log('io')
+
+                if (Math.abs(1 - ratio) < this.resizeRatio) {
                     item.height = deltaHeight;
-                    item.crop = true;
+                    item.resize = true;
                 }
             }
 
             for (var i = 0; i < itemColumnWidth; i++)
-                bufferColumnsHeight[columnIdx + i] += item.height;
+                bufferColumnsHeight[this._columnIdx + i] += item.height;
 
-            if (bufferColumnsHeight[columnIdx] > this.galleryHeightPixel)
-                this.galleryHeightPixel = bufferColumnsHeight[columnIdx];
+            if (bufferColumnsHeight[this._columnIdx] > this.galleryHeightPixel)
+                this.galleryHeightPixel = bufferColumnsHeight[this._columnIdx];
 
-            var minColumnHeight = bufferColumnsHeight[columnIdx];
-            for (var i = 0; i < bufferColumnsHeight.length; i++) {
+            var minColumnHeight = bufferColumnsHeight[this._columnIdx];
+
+            for (var i = 0; i < this.columns; i++) {
                 if (bufferColumnsHeight[i] < minColumnHeight) {
                     minColumnHeight = bufferColumnsHeight[i];
-                    columnIdx = i
+                    self._columnIdx = i
                 }
             }
 
@@ -146,18 +163,12 @@ class Gallery {
 
     render(listItem, clear) {
 
-
         function setGalleryItemCss($galleryItem, item) {
             $galleryItem.css('position', 'absolute');
             $galleryItem.css('width', item.width + 'px');
             $galleryItem.css('height', item.height + 'px');
             $galleryItem.css('top', item.top + 'px');
             $galleryItem.css('left', item.left + 'px');
-
-            //if (item.crop)
-            //    $galleryItem.css('background-color', 'green');
-            //else
-            //    $galleryItem.css('background-color', 'red');
         }
 
         if (clear === true)
