@@ -176,12 +176,12 @@ class MyGallery {
 
         if ($(".gallery-item").length)
             listItem.forEach((item) => {
-                var $galleryItem = $('.gallery-item[data-gallery-item-idx=' + item.idx + ']');
+                var $galleryItem = $('.gallery-item-lib[data-gallery-item-idx=' + item.idx + ']');
                 setGalleryItemCss($galleryItem, item)
             });
         else
             listItem.forEach((item) => {
-                var $galleryItem = $('<li class="gallery-item" data-gallery-item-idx="' + item.idx + '" data-col="' + item.columns + '">');
+                var $galleryItem = $('<li class="gallery-item-lib" data-gallery-item-idx="' + item.idx + '" data-col="' + item.columns + '">');
 
                 setGalleryItemCss($galleryItem, item);
 
