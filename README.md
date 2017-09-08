@@ -30,7 +30,7 @@ Array of image item:
 ## Examples
 
 #### index.html
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,7 +56,7 @@ Array of image item:
 ```
 
 #### main.js
-```
+```js
 var listItem = [
     {
         src: "http://...",
@@ -81,7 +81,7 @@ var listItem = [
 
 ## Test
 
-```
+```bash
 npm install
 npm run generateTestImg #very slow be patient
 npm test
