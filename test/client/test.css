@@ -1,3 +1,10 @@
+.gallery-item {
+    padding: 0 !important;
+}
+.gallery-item.resized img {
+    border: solid 1px red;
+}
+
 .gallery-item img {
     border: solid 1px black;
 }

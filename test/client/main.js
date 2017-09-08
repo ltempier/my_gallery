@@ -8,14 +8,15 @@ $(document).ready(function () {
 
         //test with same size img
         //listItem = listItem.map(function (item) {
-        //    item.src = '/img/img_lg_1.jpg';
+        //    item.src = listItem[0].src;
         //    return item
         //});
 
         var gallery = new MyGallery('#gallery', listItem, {
-            columns: 5,
-            firstItemWidth: 1,
-            resizeRatio: 20 / 100
+            columns: 8,
+            //firstItemWidth: 1,
+            maxItemWidth: 2,
+            resizeRatio: 30 / 100
         })
     })
 
