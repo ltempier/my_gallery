@@ -85,6 +85,6 @@ var listItem = [
 npm install
 npm run generateTestImg #very slow be patient
 npm test
-```
 
-#### open http://localhost:3333/
+# open http://localhost:3333/
+```
