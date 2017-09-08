@@ -77,7 +77,7 @@ var listItem = [
 ```
 
 #### result:
-![example](https://github.com/ltempier/my-gallery/raw/master/capture.jpeg)
+![example](https://github.com/ltempier/my_gallery/raw/master/capture.jpeg)
 
 ## Test
 
