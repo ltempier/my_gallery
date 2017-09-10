@@ -203,9 +203,9 @@ class MyGallery {
                 setGalleryItemCss($galleryItem, item);
 
                 $galleryItem.append([
-                    '<a href="' + item.src + '">',
+                    //'<a href="' + item.src + '">',
                     '<img src="' + item.src + '" alt="' + item.alt + '"/>',
-                    '</a>'
+                    //'</a>'
                 ].join(''));
 
                 this.$gallery.append($galleryItem);
