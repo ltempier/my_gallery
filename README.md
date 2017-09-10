@@ -1,10 +1,11 @@
 # MyGallery
+
 This library generate and optimise an image gallery grid.
 
 ## Install
 
 * Require jQuery
-* Add lib style: .../my_gallery/src/style.css
+* Add lib style: .../my_gallery/src/my-gallery.css
 * Add lib js: .../my_gallery/src/MyGallery.css
 
 ## How to use
@@ -38,7 +39,7 @@ Array of image item:
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
 
     <title>My Gallery</title>
-    <link rel="stylesheet" type="text/css" href="my_gallery/src/style.css"/>
+    <link rel="stylesheet" type="text/css" href="my_gallery/src/my-gallery.css"/>
 </head>
 <body>
 
