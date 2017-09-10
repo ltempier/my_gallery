@@ -29,6 +29,10 @@ body {
 }
 
 @media (max-width: 500px) {
+    .my-gallery-lib{
+        height: auto !important;
+    }
+
     .my-gallery-lib .gallery-item {
         position: relative !important;
         width: 100% !important;
