@@ -80,6 +80,7 @@ class MyGallery {
                         height: img.naturalHeight,
                         width: img.naturalWidth
                     });
+                    img.src = "";
 
                     if (self._listItem.length == listItem.length) {
                         self._listItem = self._listItem.sort(function (a, b) {
