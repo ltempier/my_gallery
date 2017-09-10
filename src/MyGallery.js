@@ -27,7 +27,9 @@ class MyGallery {
         this.setListItem(listItem);
     }
 
-    setListItem(listItem) {
+    setListItemOld(listItem) {
+        console.time('getImgSize old');
+
         this._listItem = [];
         var self = this;
         (listItem || []).forEach(function (item, idx) {
@@ -46,6 +48,7 @@ class MyGallery {
                     self._listItem = self._listItem.sort(function (a, b) {
                         return a.idx - b.idx
                     });
+                    console.timeEnd('getImgSize old');
 
                     self.refresh();
                     window.onresize = function () {
@@ -56,6 +59,41 @@ class MyGallery {
             img.src = item.src;
             img.idx = idx;
             img.alt = item.alt;
+        });
+    }
+
+    setListItem(listItem) {
+        this._listItem = [];
+        var self = this;
+        //console.time('getImgSize');
+
+        $.each(listItem, function (idx, item) {
+            var img = document.createElement('img');
+            img.src = item.src;
+            var poll = setInterval(function () {
+                if (img.naturalWidth) {
+                    clearInterval(poll);
+                    self._listItem.push({
+                        src: item.src,
+                        idx: idx,
+                        alt: item.alt,
+                        height: img.naturalHeight,
+                        width: img.naturalWidth
+                    });
+
+                    if (self._listItem.length == listItem.length) {
+                        self._listItem = self._listItem.sort(function (a, b) {
+                            return a.idx - b.idx
+                        });
+                        //console.timeEnd('getImgSize');
+
+                        self.refresh();
+                        window.onresize = function () {
+                            self.refresh();
+                        };
+                    }
+                }
+            }, 50)
         });
     }
 
