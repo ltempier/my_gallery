@@ -4,12 +4,14 @@
 $(document).ready(function () {
 
 
-    var gallery = new MyGallery('#gallery', largeTestListItem, {
+    var gallery = new MyGallery('#gallery', {
         columns: 6,
         //firstItemWidth: 1,
         maxItemWidth: 4,
         resizeRatio: 30 / 100
     });
+
+    gallery.setListItem(largeTestListItem);
 
     //$.getJSON('/images', function (listItem) {
     //
@@ -20,11 +22,7 @@ $(document).ready(function () {
     //    //    return item
     //    //});
     //
-    //    var gallery = new MyGallery('#gallery', listItem, {
-    //        columns: 3,
-    //        maxItemWidth: 2,
-    //        resizeRatio: 30 / 100
-    //    })
+    //    gallery.setListItem(listItem)
     //})
 
 });

@@ -3,7 +3,7 @@
 
 class MyGallery {
 
-    constructor(selector, listItem, options) {
+    constructor(selector, options, listItem) {
 
         options = options || {};
 
@@ -18,7 +18,8 @@ class MyGallery {
         this.$gallery.addClass('my-gallery-lib');
 
 
-        this.setListItem(listItem);
+        if (listItem)
+            this.setListItem(listItem);
 
         window.onresize = () => {
             this.init();
@@ -59,9 +60,9 @@ class MyGallery {
                     console.log('getImageSize', item.idx);
 
                     this._listItem.push(item);
-                    this._listItem = this._listItem.sort(function (a, b) {
-                        return a.idx - b.idx
-                    });
+                    //this._listItem = this._listItem.sort(function (a, b) {
+                    //    return a.idx - b.idx
+                    //});
                     this.process()
                 }
             })

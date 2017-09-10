@@ -10,7 +10,12 @@ This library generate and optimise an image gallery grid.
 
 ## How to use
 ```
- new MyGallery(selector, listItem, options)
+ new MyGallery(selector, options, listItem);
+
+ or
+
+ var gallery = MyGallery(selector, options);
+ gallery.setListItem(listItem);
 ```
 
 #### selector:
@@ -26,6 +31,10 @@ Array of image item:
 *  resizeRatio: max % of height crop (default: 25/100)
 *  firstItemWidth: size in column for the first img item
 *  maxItemWidth: max size in column for all img items
+
+
+#### methods:
+*  setListItem
 
 
 ## Examples
@@ -69,12 +78,12 @@ var listItem = [
     }
 ]
 
- var gallery = new MyGallery('#gallery', listItem, {
+ var gallery = new MyGallery('#gallery', {
             columns: 8,
             firstItemWidth: 1,
             maxItemWidth: 2,
             resizeRatio: 30 / 100
-        })
+        }, listItem)
 ```
 
 #### result:
